@@ -1,12 +1,28 @@
 "use client";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import books from "../../data/BOOKS.json";
-import { useState } from "react";
+import BOOKS from "../../data/BOOKS.json";
+import { useEffect, useState } from "react";
 import Navigation from "@/components/navigation";
 
-export default function Home() {
+type BooksManagement = {
+  id: number;
+  title: string;
+  author: string;
+  isbn: string;
+  quantity: number;
+  category_id: number;
+  created_by: number;
+};
+
+const BooksManagement = () => {
   const [open, setOpen] = useState(false);
   const [isEdit, setEdit] = useState(false);
+  const [tableData, setTableData] = useState<BooksManagement[]>([]);
+
+  useEffect(() => {
+    const booksData: BooksManagement[] = BOOKS;
+    setTableData(booksData);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
@@ -36,7 +52,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm">
-            {books.map((book) => {
+            {tableData.map((book) => {
               return (
                 <tr
                   key={book.id}
@@ -165,4 +181,6 @@ export default function Home() {
       </Dialog>
     </div>
   );
-}
+};
+
+export default BooksManagement;

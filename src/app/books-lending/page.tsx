@@ -1,11 +1,28 @@
 "use client";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import lending from "../../data/LENDING.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "@/components/navigation";
 
-export default function Home() {
+type LendingBooks = {
+  id: number;
+  book_id: number;
+  member_id: number;
+  borrowed_date: string;
+  due_date: string;
+  return_date: string | null;
+  status: string;
+  created_by: number;
+};
+
+const LendingBooks = () => {
   const [open, setOpen] = useState(false);
+  const [tableData, setTableData] = useState<LendingBooks[]>([]);
+
+  useEffect(() => {
+    const lendingData: LendingBooks[] = lending;
+    setTableData(lendingData);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
@@ -39,7 +56,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm">
-            {lending.map((data) => {
+            {tableData.map((data) => {
               return (
                 <tr
                   key={data.id}
@@ -194,4 +211,6 @@ export default function Home() {
       </Dialog>
     </div>
   );
-}
+};
+
+export default LendingBooks;

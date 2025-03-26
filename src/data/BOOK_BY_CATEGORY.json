@@ -1,0 +1,11 @@
+{
+  "labels": [
+    "Fiction",
+    "Non-Fiction",
+    "Science",
+    "History",
+    "Biography",
+    "Fantasy"
+  ],
+  "data": [120, 90, 75, 60, 50, 130]
+}
