@@ -9,23 +9,30 @@ import MOST_BORROWED from "../../data/MOST_BORROWED.json";
 import MONTHLY_LENDING_TRENDS from "../../data/MONTHLY_LENDING.json";
 import BOOK_BY_CATEGORY from "../../data/BOOK_BY_CATEGORY.json";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-// const options = [
-//   "Most borrowed books",
-//   "Monthly lending trends",
-//   "Books by category distribution",
-// ];
+const options = [
+  "Most borrowed books",
+  "Monthly lending trends",
+  "Books by category distribution",
+];
+
+const listUrlChart = [
+  "https://run.mocky.io/v3/0fd10adb-85d1-4762-89d4-f1939cc1f9f7",
+  "https://run.mocky.io/v3/2e67680d-d4bf-493c-b824-0aa26a6f4570",
+  "https://run.mocky.io/v3/fef9ff42-57ef-4d65-8335-a6d7c93b6865",
+];
 
 const listDataChart = [MOST_BORROWED, MONTHLY_LENDING_TRENDS, BOOK_BY_CATEGORY];
 
 const Dashboard = () => {
-  const [selectedOption, setSelectedOption] = useState("1");
+  const [selectedOption, setSelectedOption] = useState("0");
   const [dataCharat, setDataChart] = useState(listDataChart[0]);
   const data = {
     labels: dataCharat.labels,
     datasets: [
       {
-        label: "Most borrowed books",
+        label: options[parseInt(selectedOption)],
         data: dataCharat.data,
         backgroundColor: [
           "rgba(153, 102, 255, 0.2)",
@@ -38,8 +45,20 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    setDataChart(listDataChart[parseInt(selectedOption) - 1]);
+    handleGetCharts();
   }, [selectedOption]);
+
+  const handleGetCharts = () => {
+    axios
+      .get(listUrlChart[parseInt(selectedOption)])
+      .then((res) => {
+        const data = res.data;
+        setDataChart(data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
@@ -60,9 +79,11 @@ const Dashboard = () => {
             onChange={(e) => setSelectedOption(e.target.value)}
             value={selectedOption}
           >
-            <option value="1">Most borrowed books</option>
-            <option value="2">Monthly lending trends</option>
-            <option value="3">Books by category distribution</option>
+            {options.map((option, index) => (
+              <option key={index} value={index}>
+                {option}
+              </option>
+            ))}
           </select>
         </form>
 
